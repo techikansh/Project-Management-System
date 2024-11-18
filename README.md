@@ -6,7 +6,8 @@ Die Project Management API ist eine Spring Boot-Webanwendung, die eine Projektma
 - Aufgabenerstellung und -tracking innerhalb von Projekten
 - Rollenbasierte Zugriffssteuerung
 - JWT-basierte Sicherheitsauthentifizierung
-  
+
+## Technologien
 - Entwickelt mit Spring Boot 3.3.5
 - Verwendet Spring Security für Authentifizierung
 - JPA/Hibernate für Datenpersistenz
@@ -21,13 +22,3 @@ Die Project Management API ist eine Spring Boot-Webanwendung, die eine Projektma
 - Service-LAyer für Geschäftslogik
 - Repository-Layer für Datenzugriff
 - Sicherheits-Layer für Authentifizierung
-
-## Technologien
-- Java 17
-- Spring Boot
-- Spring Security
-- JPA/Hibernate
-- MySQL
-- JWT
-- Lombok
-- Maven
