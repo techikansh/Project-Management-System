@@ -72,8 +72,6 @@ public class ProjectService {
             var projects = projectRepository
                 .findByOwnerId(currentUser.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Keine Projects gefunden!"));
-
-            System.out.println(projects);
             
             return new ResponseEntity<>(
                 new ProjectResponse(true, "Projects gefunden", projects),
