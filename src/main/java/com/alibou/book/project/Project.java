@@ -46,7 +46,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    @Column(length = 1000) 
+    @Column(length = 3000) 
     private String description;
     private Integer storyPoints;
     private LocalDate dueDate;
