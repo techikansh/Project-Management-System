@@ -37,9 +37,9 @@ public class AuthenticationController {
         try {
             return new ResponseEntity<>(authService.authenticate(request), HttpStatus.OK);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AuthenticationResponse(false, null), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new AuthenticationResponse(false, null, null, null), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            return new ResponseEntity<>(new AuthenticationResponse(false, null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new AuthenticationResponse(false, null, null, null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -76,6 +76,8 @@ public class AuthenticationService {
             return AuthenticationResponse.builder()
                     .success(true)
                     .token(jwtToken)
+                    .fullname(user.getFullname())
+                    .email(user.getEmail())
                     .build();
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Ungültige Anmeldedaten");
