@@ -1,5 +1,6 @@
 package com.alibou.book.project;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,7 +70,7 @@ public class ProjectService {
         }
     }
 
-    public ResponseEntity<ProjectResponse> getProjects(User currentUser) {
+    public ResponseEntity<ProjectResponse> getProjects(User currentUser, String searchQuery, LocalDate dueDate) {
         try {
             List<Project> ownedProjects = projectRepository
                     .findByOwnerId(currentUser.getId())
@@ -84,21 +85,52 @@ public class ProjectService {
             allProjects.addAll(ownedProjects);
             allProjects.addAll(memberProjects);
 
-            if (allProjects.isEmpty()) {
+            List<Project> filteredProjects;
+            if (searchQuery != null && dueDate != null) {
+                filteredProjects = allProjects
+                    .stream()
+                    .filter( project ->
+                        (project.getName().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                        project.getDescription().toLowerCase().contains(searchQuery.toLowerCase())) &&
+                        project.getDueDate().isBefore(dueDate)
+                    ).toList();
+            } else if (searchQuery != null && dueDate == null) {
+                filteredProjects = allProjects
+                    .stream()
+                    .filter( project ->
+                        (project.getName().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                        project.getDescription().toLowerCase().contains(searchQuery.toLowerCase()))
+                    ).toList();
+            } else if (searchQuery == null && dueDate != null) {
+                filteredProjects = allProjects
+                    .stream()
+                    .filter( project ->
+                        project.getDueDate().isBefore(dueDate)
+                    ).toList();
+            } else {
+                filteredProjects = allProjects
+                    .stream()
+                    .toList();
+            }
+
+            if (filteredProjects.isEmpty()) {
                 throw new EntityNotFoundException("Keine Projects gefunden!");
             }
 
             return new ResponseEntity<>(
-                    new ProjectResponse(true, "Projects gefunden", allProjects),
-                    HttpStatus.OK);
+                    new ProjectResponse(true, "Projects gefunden", filteredProjects),
+                    HttpStatus.OK)
+                ;
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(
                     new ProjectResponse(false, e.getMessage(), null),
-                    HttpStatus.NOT_FOUND);
+                    HttpStatus.NOT_FOUND
+                );
         } catch (Exception e) {
             return new ResponseEntity<>(
                     new ProjectResponse(false, "Etwas fehlgeschlagen", null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
         }
     }
 
