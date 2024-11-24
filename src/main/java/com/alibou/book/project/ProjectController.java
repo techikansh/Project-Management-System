@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.service.annotation.GetExchange;
 
 import com.alibou.book.user.User;
 
@@ -71,6 +70,31 @@ public class ProjectController {
     public ResponseEntity<ProjectResponse> deleteProject(@PathVariable Integer id) {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return projectService.deleteProject(id, currentUser);
+    }
+
+
+   @PostMapping("/fetch-emails") 
+   public ResponseEntity<FetchEmailsResponse> fetchEmails(@RequestBody @Valid AddMemberRequest keyword){
+        return projectService.fetchEmails(keyword.getEmail());
+   }
+
+    @PutMapping("/add-member/{id}")
+    public ResponseEntity<?> addMember (
+        @PathVariable Integer id,
+        @RequestBody AddMemberRequest addMemberRequest
+    ) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(addMemberRequest.getEmail());
+        return projectService.addMember(id, addMemberRequest.getEmail(), currentUser);
+    }
+
+    @DeleteMapping("/delete-member/{id}")
+    public ResponseEntity<ProjectResponse> deleteMember(
+        @PathVariable Integer id,
+        @RequestBody @Valid AddMemberRequest addMemberRequest
+    ) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return projectService.deleteMember(id, addMemberRequest.getEmail(), currentUser);
     }
 
 

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProjectRepository extends JpaRepository<Project, Integer>{
 
     Optional<List<Project>> findByOwnerId(Integer userId);
+    Optional <List<Project>> findByMembersId (Integer userId);
     
 
 }

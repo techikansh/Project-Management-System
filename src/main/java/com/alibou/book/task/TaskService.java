@@ -1,6 +1,7 @@
 package com.alibou.book.task;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibou.book.project.ProjectRepository;
 import com.alibou.book.user.User;
+import com.alibou.book.user.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -20,6 +22,8 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
+
 
     public ResponseEntity<TaskResponse> createTask(TaskRequest taskRequest, Integer projectId, User currentUser) {
 
@@ -28,11 +32,12 @@ public class TaskService {
                 .findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException("kein Projekt mit id " + projectId));
 
-            if (!project.getOwner().getEmail().equals(currentUser.getEmail())) {
-                return new ResponseEntity<>(
-                    new TaskResponse(false, "Keine Berechtigung!", null),
-                    HttpStatus.FORBIDDEN
-                );
+            List<String> membersEmails = project.getMembers().stream().map(User::getEmail).toList();
+            if (
+                !project.getOwner().getEmail().equals(currentUser.getEmail()) && 
+                !membersEmails.contains(currentUser.getEmail())
+            ) {
+                return new ResponseEntity<>(new TaskResponse(false, "Keine Berechtigung", null), HttpStatus.FORBIDDEN);
             }
 
             var task = Task.builder()
@@ -74,7 +79,12 @@ public class TaskService {
                 .findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException("kein Projekt mit id " + projectId));
 
-            if (!project.getOwner().getEmail().equals(currentUser.getEmail())) {
+            
+            List<String> membersEmails = project.getMembers().stream().map(User::getEmail).toList();
+            if (
+                !project.getOwner().getEmail().equals(currentUser.getEmail()) && 
+                !membersEmails.contains(currentUser.getEmail())
+            ) {
                 return new ResponseEntity<>(new TaskResponse(false, "Keine Berechtigung", null), HttpStatus.FORBIDDEN);
             }
 
@@ -106,12 +116,14 @@ public class TaskService {
                 .orElseThrow(() -> new EntityNotFoundException("kein Projekt mit id: " + projectId));
 
             
-            if (!project.getOwner().getEmail().equals(currentUser.getEmail())) {
-                return new ResponseEntity<>(
-                    new TaskResponse(false, "Keine Berechtigung", null),
-                    HttpStatus.FORBIDDEN
-                );
+            List<String> membersEmails = project.getMembers().stream().map(User::getEmail).toList();
+            if (
+                !project.getOwner().getEmail().equals(currentUser.getEmail()) && 
+                !membersEmails.contains(currentUser.getEmail())
+            ) {
+                return new ResponseEntity<>(new TaskResponse(false, "Keine Berechtigung", null), HttpStatus.FORBIDDEN);
             }
+
             var task = taskRepository
                 .findById(taskId)
                 .orElseThrow(() -> new EntityNotFoundException("kein Task mit id: " + taskId));
@@ -141,11 +153,12 @@ public class TaskService {
             .findById(projectId)
             .orElseThrow(() -> new EntityNotFoundException("kein Project mit id:" + projectId));
 
-            if (!project.getOwner().getEmail().equals(currentUser.getEmail())) {
-                return new ResponseEntity<>(
-                    new TaskResponse(false, "Keine Berechtigung", null),
-                    HttpStatus.FORBIDDEN
-                );
+            List<String> membersEmails = project.getMembers().stream().map(User::getEmail).toList();
+            if (
+                !project.getOwner().getEmail().equals(currentUser.getEmail()) && 
+                !membersEmails.contains(currentUser.getEmail())
+            ) {
+                return new ResponseEntity<>(new TaskResponse(false, "Keine Berechtigung", null), HttpStatus.FORBIDDEN);
             }
             
             var task = taskRepository
@@ -186,11 +199,12 @@ public class TaskService {
                 .findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException("kein Project mit id:" + projectId));
 
-            if (!project.getOwner().getEmail().equals(currentUser.getEmail())) {
-                return new ResponseEntity<>(
-                    new TaskResponse(false, "Keine Berechtigung", null),
-                    HttpStatus.FORBIDDEN
-                );
+            List<String> membersEmails = project.getMembers().stream().map(User::getEmail).toList();
+            if (
+                !project.getOwner().getEmail().equals(currentUser.getEmail()) && 
+                !membersEmails.contains(currentUser.getEmail())
+            ) {
+                return new ResponseEntity<>(new TaskResponse(false, "Keine Berechtigung", null), HttpStatus.FORBIDDEN);
             }
 
             var task = taskRepository

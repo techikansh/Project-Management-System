@@ -21,6 +21,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -46,7 +48,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    @Column(length = 3000) 
+    @Column(length = 3000)
     private String description;
     private Integer storyPoints;
     private LocalDate dueDate;
@@ -56,13 +58,16 @@ public class Project {
     @JoinColumn(name = "user_id", nullable = false)
     private User owner;
 
-    @OneToMany(
-        mappedBy = "project", 
-        cascade = CascadeType.ALL, 
-        orphanRemoval = true,
-        fetch = FetchType.EAGER
-    )
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Task> tasks = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "project_members",
+        joinColumns = @JoinColumn(name = "project_id"), 
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> members;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
