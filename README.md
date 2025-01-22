@@ -1,3 +1,5 @@
+Die Webseite is hier bereitgestellt: https://kanban-board-opal-three.vercel.app/auth
+
 # Project-Management-System
 
 Die Project Management API ist eine Spring Boot-Webanwendung, die eine Projektmanagement- und Aufgabenverwaltungsplattform bietet. Die Anwendung ermöglicht Benutzern:
